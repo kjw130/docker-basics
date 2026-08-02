@@ -4,16 +4,13 @@ import type { Request, Response, NextFunction } from 'express';
 import { error } from "node:console";
 import { Pool } from 'pg';
 
-
 const app = express();
 const port = process.env.PORT;
 app.use(express.json());
 
-
 // Page views API 
 // curl https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia.org/all-access/2026/07/30
 // get https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia.org/all-access/{year}/{month}/{day}
-
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -38,7 +35,7 @@ app.get('/health', (req: Request, res: Response) => {
 const fetchWikiApi = async () => {
     // Get yesterdays date
     const yesterday: Date = new Date();
-    yesterday.setDate(yesterday.getDate() - 1)
+    yesterday.setDate(yesterday.getDate() - 2)
     const formattedISO = yesterday.toISOString().split('T')[0];
     if(!formattedISO){
         return console.error('Error retrieving yesterdays date')
@@ -48,7 +45,12 @@ const fetchWikiApi = async () => {
     const year = formattedISO.split('-')[0]
 
     try{
-        const response = await fetch(`https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia.org/all-access/${year}/${month}/${day}`);
+        const url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia.org/all-access/${year}/${month}/${day}`
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'docker-basics-practice/1.0 (wardkai558@gmail.com)'
+            }
+        });
         console.log(response)
         if (!response.ok) {
             return console.error('Wikipedia API error:', response.status, response.statusText);
