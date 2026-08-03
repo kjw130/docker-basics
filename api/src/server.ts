@@ -68,6 +68,31 @@ const fetchWikiApi = async () => {
     }
 }   
 
+app.get('/getWikiData', async (req: Request, res: Response) => {
+    try {
+    // Range will be selectable from a list not an input
+    const range = req.query.range ? +req.query.range : 1;
+
+    // Map range to date filter
+    const dateRange: Date = new Date();
+    dateRange.setDate(dateRange.getDate() - range)
+
+    // Build the query 
+    const query = 'SELECT * FROM wikidata WHERE snapshot_date >= $1 ORDER BY rank'
+
+    // Call the query
+    const result = await pool.query(query, [dateRange])
+    
+    // Return query result and rows
+    return res.json({status: 'success', data: result.rows})
+    
+    
+    } catch (error){
+        console.error(error)
+        return res.status(500).json({status: 'error', error: error})
+    }
+})
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
