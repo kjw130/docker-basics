@@ -3,10 +3,12 @@ import express from "express";
 import type { Request, Response, NextFunction } from 'express';
 import { error } from "node:console";
 import { Pool } from 'pg';
+import cors from 'cors';
 
 const app = express();
 const port = process.env.PORT;
 app.use(express.json());
+app.use(cors());
 
 // Page views API 
 // curl https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia.org/all-access/2026/07/30
