@@ -10,12 +10,38 @@ function App() {
       .then((wikiData) => setData(wikiData.data));
   }, []);
 
+
+  // Find the max view_count in your data (for scaling bar widths relative to the top page)
+  const maxViewCount = Math.max(...data.map(item => item.view_count));
+
   return (
-    <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Page Title</th>
+          <th>View Count</th>
+        </tr>
+      </thead>
+      <tbody>
       {data.map((item, index) => (
-        <div key={index}>{item.rank}. {item.page_title} — {item.view_count} views</div>
+        <tr key={index}>
+          <td>{item.rank}</td>
+          <td>{item.page_title}</td>
+          <td>{item.view_count} views</td>
+          <td style={{ width: '300px', backgroundColor: '#e0e0e0' }}>
+            <div
+              style={{
+                height: '10px',
+                width: `${(item.view_count / maxViewCount) * 100}%`,
+                backgroundColor: 'blue'
+              }}
+            ></div>
+          </td>
+        </tr>
       ))}
-    </div>
+    </tbody>
+    </table>
   );
 }
 
