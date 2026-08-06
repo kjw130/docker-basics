@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [data, setData] = useState<any[]>([]);
+  const [selectedPage, setSelectedPage] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('http://localhost:3000/getWikiData?range=2')
@@ -15,6 +16,7 @@ function App() {
   const maxViewCount = Math.max(...data.map(item => item.view_count));
   
   return (
+    <div>
     <table>
       <thead>
         <tr>
@@ -25,7 +27,7 @@ function App() {
       </thead>
       <tbody>
       {data.map((item, index) => (
-        <tr key={index}>
+        <tr key={index} onClick={() => setSelectedPage(item.page_title)} style={{ cursor: 'pointer', backgroundColor: selectedPage === item.page_title ? '#f0f0f0' : 'transparent' }}>
           <td>{item.rank}</td>
           <td>{item.page_title}</td>
           <td>{item.view_count} views</td>
@@ -42,6 +44,14 @@ function App() {
       ))}
     </tbody>
     </table>
+
+      {selectedPage && (
+        <div>
+          <h2>Selected Page: {selectedPage}</h2>
+        </div>
+      )}
+    </div>
+
   );
 }
 

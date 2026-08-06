@@ -70,7 +70,6 @@ const fetchWikiApi = async () => {
     }
 }   
 
-
 app.get('/getPageHistory', async (req: Request, res: Response) => {
     try {
 
@@ -89,10 +88,6 @@ app.get('/getPageHistory', async (req: Request, res: Response) => {
         return res.status(500).json({status: 'error', error: error});
     }
 });
-
-
-
-
 
 
 app.get('/getWikiData', async (req: Request, res: Response) => {
