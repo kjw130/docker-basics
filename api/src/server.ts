@@ -70,6 +70,31 @@ const fetchWikiApi = async () => {
     }
 }   
 
+
+app.get('/getPageHistory', async (req: Request, res: Response) => {
+    try {
+
+        const page = req.query.page;
+        if (!page) {
+            return res.status(400).json({status: 'error', error: 'Missing page parameter'});
+        }
+        
+        const query = 'SELECT * FROM wikidata WHERE page_title = $1 ORDER BY snapshot_date ASC';
+        const result = await pool.query(query, [page]);
+        return res.json({status: 'success', data: result.rows});
+        
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({status: 'error', error: error});
+    }
+});
+
+
+
+
+
+
 app.get('/getWikiData', async (req: Request, res: Response) => {
     try {
     // Range will be selectable from a list not an input

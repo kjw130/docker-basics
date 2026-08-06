@@ -13,7 +13,7 @@ function App() {
 
   // Find the max view_count in your data (for scaling bar widths relative to the top page)
   const maxViewCount = Math.max(...data.map(item => item.view_count));
-
+  
   return (
     <table>
       <thead>
